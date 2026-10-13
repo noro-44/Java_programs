@@ -49,13 +49,20 @@ public class Main
                 }
 
                 if (args.length != 2) {
-                    throw new IllegalArgumentException(
-                            "Ожидаются два аргумента: гипотенуза и катет. Для подсказки используйте help или --help."
-                    );
+                    throw new IllegalArgumentException("Ожидаются два аргумента: гипотенуза и катет. Для подсказки используйте help или --help.");
                 }
 
-                c = parseDouble(args[0], "гипотенузы");
-                a = parseDouble(args[1], "катета");
+                try {
+                    c = Double.parseDouble(args[0]);
+                } catch (NumberFormatException er) {
+                    throw new NumberFormatException("Некорректное значение гипотенузы: " + args[0]);
+                }
+
+                try {
+                    a = Double.parseDouble(args[1]);
+                } catch (NumberFormatException er) {
+                    throw new NumberFormatException("Некорректное значение катета: " + args[1]);
+                }
             }
             //если при запуске не были переданы аргументы - запросить у пользователя
             else {
@@ -63,14 +70,22 @@ public class Main
 
                 System.out.print("Введите значение гипотенузы прямоугольного треугольника: ");
                 String ci = scan.next();
-                c = parseDouble(ci, "гипотенузы");
+                try {
+                    c = Double.parseDouble(ci);
+                } catch (NumberFormatException er) {
+                    throw new NumberFormatException("Некорректное значение гипотенузы: " + ci);
+                }
 
                 System.out.print("Введите значение одного из катетов прямоугольного треугольника: ");
                 String ai = scan.next();
-                a = parseDouble(ai, "катета");
+                try {
+                    a = Double.parseDouble(ai);
+                } catch (NumberFormatException er) {
+                    throw new NumberFormatException("Некорректное значение катета: " + ai);
+                }
             }
 
-            validate(c, a);
+            valid(c, a);
 
             b = calculations.cath(c, a);
             r = calculations.roic(a, b, c);
@@ -80,33 +95,20 @@ public class Main
 
         }
         //ошибка преобразования строки в число
-        catch (NumberFormatException e) {
-            System.err.println("Ошибка формата числа: " + e.getMessage());
+        catch (NumberFormatException er) {
+            System.err.println("Ошибка формата числа: " + er.getMessage());
         }
         //ошибка данных (неудовлетворяющие задаче данные)
-        catch (IllegalArgumentException e) {
-            System.err.println("Ошибка данных: " + e.getMessage());
+        catch (IllegalArgumentException er) {
+            System.err.println("Ошибка данных: " + er.getMessage());
         }
         //иная ошибка
-        catch (Exception e) {
-            System.err.println("Непредвиденная ошибка: " + e.getMessage());
+        catch (Exception er) {
+            System.err.println("Непредвиденная ошибка: " + er.getMessage());
         }
     }
 
-    ///Преобразует строку в вещественное число, добавляя в случае неудачи сообщение об ошибке
-    ///На вход получает value - строку, которую нужно преобразовать;
-    ///fieldName - название поля, используюмое в сообщении об ошибке
-    ///Возвращает вещественное число - преобразованное значение строки;
-    ///бросает исключение NumberFormatException, если строка не является числом
-    ///(private) может использоваться только внутри класса Main
-    private static double parseDouble(String value, String fieldName) {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("некорректное значение " + fieldName + ": " + value);
-        }
-    }
-
+    /*------------------------------------------------------------------------*/
     /** Проверяет корректность вводимых данных <br>
      * (private) может использоваться только внутри класса Main
      * @param c гипотенуза прямоугольного треугольника
@@ -118,7 +120,7 @@ public class Main
      * * катет меньше или равен 0; <br>
      * * катет больше или равен гипотенузе <br>
      **/
-    private static void validate(double c, double a) {
+    private static void valid(double c, double a) {
         if (Double.isNaN(c) || Double.isInfinite(c)) {
             throw new IllegalArgumentException("Гипотенуза должна быть конечным числом");
         }
@@ -144,4 +146,5 @@ public class Main
             throw new IllegalArgumentException("Катет не может быть больше гипотенузы");
         }
     }
+    /*------------------------------------------------------------------------*/
 }
