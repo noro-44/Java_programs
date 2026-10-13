@@ -121,6 +121,8 @@ public class Main
      * * катет больше или равен гипотенузе <br>
      **/
     private static void valid(double c, double a) {
+        //isNan() проверяет, является ли число значением NaN (Not-a-Number)
+        //isInfinite() проверяет, является ли число бесконечностью (положительной или отрицательной)
         if (Double.isNaN(c) || Double.isInfinite(c)) {
             throw new IllegalArgumentException("Гипотенуза должна быть конечным числом");
         }
