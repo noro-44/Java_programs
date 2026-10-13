@@ -32,7 +32,6 @@ public class Main
             double c = 0.0;
             double a = 0.0, b = 0.0;
             double r = 0.0;
-            double g = 9.81;
 
 
             //если при запуске были переданы аргументы
@@ -90,8 +89,6 @@ public class Main
 
             b = calculations.cath(c, a);
             r = calculations.roic(a, b, c);
-
-            System.out.printf("g = %.4f\n", g);
 
             System.out.printf("Второй катет прямоугольного треугольника равен: %.4f\n", b);
             System.out.printf("Радиус вписанной в прямоугольный треугольник окружности равен: %.4f\n", r);
