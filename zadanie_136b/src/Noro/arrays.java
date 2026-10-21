@@ -26,6 +26,8 @@ public class arrays
         }
         for (int i = 0; i < n; i += 1)
         {
+            //.add(индекс, элемент) добавляет элемент по индексу
+            //вариация .add(элемент) добавляет элемент в конец массива
             a.add(i, (op + rand.nextDouble() * (ed - op)));
         }
     }
@@ -40,6 +42,7 @@ public class arrays
         double comp = 1.0;
         for (int y = 0; y < n; y += 1)
         {
+            //.get(индекс) возвращает элемент по заданному индексу
             comp *= a.get(y);
         }
         return comp;
@@ -59,7 +62,7 @@ public class arrays
             {
                 System.out.printf("\n");
             }
-            System.out.printf("%8.4f  ", a.get(j));
+            System.out.printf("%8.4f  ", a.get(j)); //.get(индекс) возвращает элемент по заданному индексу
         }
     }
     /*------------------------------------------------------------------------*/
