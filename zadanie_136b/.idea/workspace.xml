@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a004791-8088-4d96-beef-b0bae1250218" name="Changes" comment="" />
+    <list default="true" id="5a004791-8088-4d96-beef-b0bae1250218" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../class_BlackHole/src/Noro/BlackHole.java" beforeDir="false" afterPath="$PROJECT_DIR$/../class_BlackHole/src/Noro/BlackHole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/zadanie_136b/Noro/arrays.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/zadanie_136b/Noro/arrays.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Noro/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Noro/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Noro/arrays.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Noro/arrays.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,7 +96,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../zadanie_15" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../class_BlackHole" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
@@ -130,8 +136,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/zadanie_136b$Main.ic" NAME="Main Coverage Results" MODIFIED="1792574514299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/zadanie_136b$Main.ic" NAME="Main Coverage Results" MODIFIED="1794931159662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
