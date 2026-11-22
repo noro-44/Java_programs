@@ -13,6 +13,13 @@ import java.io.*;
 public class arrays
 {
     /*------------------------------------------------------------------------*/
+    //Собственное исключение для «пустого» файла
+    public static class EmptyFileException extends IOException {
+        public EmptyFileException(String namae) {
+            super("Файл '" + namae + "' не содержит чисел");
+        }
+    }
+    /*------------------------------------------------------------------------*/
     /** Заполняет одномерный действительный массив случайными числами в диапазоне [op; en]
      * @param n длина одномерного массива (количество элементов)
      * @param op начало диапазона
@@ -33,6 +40,9 @@ public class arrays
         }
         for (int i = 0; i < n; i += 1)
         {
+            //rand.nextDouble() возвращает случайное число в диапазоне [0.0; 1.0)
+            //умножение на длину заданного диапазона (op - en) позволяет сдвинуть диапазон на значение длины
+            //прибавление начала диапазона op позволяет сдвинуть диапазон на значение начала диапазона, тем самым образовывая необходимый диапазон
             a[i] = (op + rand.nextDouble() * (en - op));
             //вариация nextDouble(min, max)
             //a[i] = rand.nextDouble(op, en);
@@ -46,13 +56,13 @@ public class arrays
      * @param op начало диапазона
      * @param en конец диапазона
      **/
-    public static void rand_double_arr(ArrayList<Double> b, double op, double en)
+    public static ArrayList<Double> rand_double_arrlist(int n, double op, double en)
     {
 
         Random rand = new Random();
 
-        int n = b.size();
-        //ArrayList<Double> b = new ArrayList<Double>(n);
+        //int n = b.size();
+        ArrayList<Double> b = new ArrayList<Double>(n);
 
         if (op > en)
         {
@@ -60,13 +70,15 @@ public class arrays
             op = en;
             en = temp;
         }
-        for (int i = 0; i < n; i += 1)
-        {
-            //.add(индекс, элемент) добавляет элемент по индексу
-            //вариация .add(элемент) добавляет элемент в конец массива
-            b.set(i, (op + rand.nextDouble() * (en - op)));
-            //b.add(i, rand.nextDouble(op, en));
-        }
+
+        //rand.nextDouble() возвращает случайное число в диапазоне [0.0; 1.0)
+        //умножение на длину заданного диапазона (op - en) позволяет сдвинуть диапазон на значение длины
+        //прибавление начала диапазона op позволяет сдвинуть диапазон на значение начала диапазона, тем самым образовывая необходимый диапазон
+        //.add(индекс, элемент) добавляет элемент по индексу
+        //вариация .add(элемент) добавляет элемент в конец массива
+        b.add((op + rand.nextDouble() * (en - op)));
+
+        return b;
     }
     /*------------------------------------------------------------------------*/
     /** Вычисляет произведение всех членов одномерного действительнго массива
@@ -87,7 +99,7 @@ public class arrays
      * @param b одномерный ArrayList
      * @return произведение всех элементов массива b
      **/
-    public static double product_double_arr(ArrayList<Double> b)
+    public static double product_double_arrlist(ArrayList<Double> b)
     {
         int n = b.size();
         double comp = 1.0;
@@ -120,7 +132,7 @@ public class arrays
      * @param b одномерный ArrayList действительных чисел
      * @param l количество элементов в одной строке
      **/
-    public static void print_double_arr(ArrayList<Double> b, int l) //
+    public static void print_double_arrlist(ArrayList<Double> b, int l) //
     {
         int n = b.size();
         for (int j = 0; j < n; j += 1)
@@ -134,13 +146,19 @@ public class arrays
     }
     /*------------------------------------------------------------------------*/
     /** Считывает одномерный действительный массив из текстового файла
-     * @param text текстовый файл
      * @param namae имя файла
-     * @param n количество элементов в массиве
-     * @param a одномерный массив действительных чисел
+     * @return a одномерный массив действительных чисел
+     * @throws FileNotFoundException файла нет
+     * @throws EmptyFileException    в файле не оказалось чисел
+     * @throws IOException           любая другая ошибка ввода-вывода
      */
-    public static double[] read_double_arr_from_text_file(String namae) {
+    public static double[] read_double_arr_from_text_file(String namae) throws IOException {
         File text = new File(namae);
+
+        //проверка: был ли найден файл с именем namae
+        if (!text.isFile()) {
+            throw new FileNotFoundException("Файл не найден: " + namae);
+        }
 
         //определение количества чисел в файле
         int n = 0;
@@ -153,8 +171,6 @@ public class arrays
                 n += 1;
             }
 
-        } catch (FileNotFoundException e) {
-            System.err.println("Файл не найден: " + namae);
         } finally {
             //закрытие файла
             if (scan != null) {
@@ -172,13 +188,10 @@ public class arrays
                 if (read.hasNextDouble()) {
                     a[i] = read.nextDouble();
                 } else {
-                    System.err.printf("Файл %s содержит меньше %d чисел%n", namae, n);
-                    return new double[0];
+                    throw new EmptyFileException(namae);
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            System.err.println("Файл не найден: " + namae);
         } finally {
             if (read != null) {
                 read.close();             // закрывается второй Scanner
@@ -189,68 +202,194 @@ public class arrays
     }
     /*------------------------------------------------------------------------*/
     /** Считывает одномерный действительный ArrayList из текстового файла
-     * @param text текстовый файл
      * @param namae имя файла
-     * @param b одномерный ArrayList действительных чисел
+     * @return b одномерный ArrayList действительных чисел
+     * @throws FileNotFoundException файла нет
+     * @throws EmptyFileException    в файле не оказалось чисел
+     * @throws IOException           любая другая ошибка ввода-вывода
      */
-    public static void read_double_arr_from_text_file(File text, String namae, ArrayList<Double> b) {
-        //
+    public static ArrayList<Double> read_double_arrlist_from_text_file(String namae) throws IOException {
+        File text = new File(namae);
+
+        //проверка: был ли найден файл с именем namae
+        if (!text.isFile()) {
+            throw new FileNotFoundException("Файл не найден: " + namae);
+        }
+
+        ArrayList<Double> b = new ArrayList<Double>(1);
+
+        Scanner read = null;
+        try {
+            read = new Scanner(text);
+            read.useLocale(Locale.US);
+
+            while (read.hasNextDouble()) {
+                b.add(read.nextDouble());
+            }
+            if (b.isEmpty()) {
+                throw new EmptyFileException(namae);
+            }
+
+        } finally {
+            if (read != null) {
+                read.close();             // закрывается Scanner
+            }
+        }
+
+        return b;
     }
     /*------------------------------------------------------------------------*/
     /** Считывает одномерный действительный массив из бинарного файла
-     * @param bin бинарный файл
      * @param namae имя файла
-     * @param n количество элементов в массиве
-     * @param a одномерный массив действительных чисел
+     * @return a одномерный массив действительных чисел
+     * @throws FileNotFoundException файла нет
+     * @throws EmptyFileException    в файле не оказалось чисел
+     * @throws IOException           любая другая ошибка ввода-вывода
      */
-    public static void read_double_arr_from_bin_file(File bin, String namae, int n, double[] a) {
-        //
+    public static double[] read_double_arr_from_bin_file(String namae) throws IOException {
+        File bin = new File(namae);
+
+        //проверка: был ли найден файл с именем namae
+        if (!bin.isFile()) {
+            throw new FileNotFoundException("Файл не найден: " + namae);
+        }
+
+        // определение количества чисел в файле
+        int n = 0;
+        DataInputStream scan = null;
+        try {
+            scan = new DataInputStream(new BufferedInputStream(new FileInputStream(bin)));
+
+            while (true) {
+                try {
+                    scan.readDouble();
+                    n += 1;
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+        } finally {
+            if (scan != null) {
+                scan.close();
+            }
+        }
+
+        double[] a = new double[n];
+
+        DataInputStream read = null;
+        try {
+            read = new DataInputStream(new BufferedInputStream(new FileInputStream(bin)));
+
+            for (int i = 0; i < n; i += 1) {
+                try {
+                    a[i] = read.readDouble();
+                } catch (EOFException e) {
+                    throw new EmptyFileException(namae);
+                }
+            }
+        } finally {
+            if (read != null) {
+                read.close();
+            }
+        }
+
+        return a;
     }
     /*------------------------------------------------------------------------*/
     /** Считывает одномерный действительный ArrayList из бинарного файла
-     * @param bin бинарный файл
      * @param namae имя файла
-     * @param b одномерный ArrayList действительных чисел
+     * @return b одномерный ArrayList действительных чисел
+     * @throws FileNotFoundException файла нет
+     * @throws EmptyFileException    в файле не оказалось чисел
+     * @throws IOException           любая другая ошибка ввода-вывода
      */
-    public static void read_double_arr_from_bin_file(File bin, String namae, ArrayList<Double> b) {
-        //
+    public static ArrayList<Double> read_double_arrlist_from_bin_file(String namae) throws IOException {
+        File bin = new File(namae);
+
+        // проверка: был ли найден файл с именем namae
+        if (!bin.isFile()) {
+            throw new FileNotFoundException("Файл не найден: " + namae);
+        }
+
+        ArrayList<Double> b = new ArrayList<Double>(1);
+
+        DataInputStream read = null;
+        try {
+            read = new DataInputStream(new BufferedInputStream(new FileInputStream(bin)));
+
+            while (true) {
+                try {
+                    b.add(read.readDouble());
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+
+            if (b.isEmpty()) {
+                throw new EmptyFileException(namae);
+            }
+
+        } finally {
+            if (read != null) {
+                read.close();
+            }
+        }
+
+        return b;
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный массив в текстовый файл
-     * @param text текстовый файл
      * @param namae имя файла
      * @param n количество элементов в массиве
      * @param a одномерный массив действительных чисел
      */
-    public static void print_double_arr_for_text_file(File text, String namae, int n, double[] a) {
-        //
+    public static void print_double_arr_for_text_file(String namae, int n, double[] a) {
+        PrintWriter write = null;
+        try {
+            write = new PrintWriter(new FileWriter(namae));
+
+            for (int i = 0; i < a.length; i += 1) {
+                // Locale.US — чтобы в файле была точка, а не запятая
+                // %n — перенос строки в системном формате (на Linux/Windows одинаково)
+                write.printf(Locale.US, "%.6f%n", a[i]);
+            }
+
+            // КРИТИЧНО: PrintWriter НЕ бросает IOException — он молча выставляет
+            // внутренний флаг. Без checkError() ошибка диска (нет места, нет прав)
+            // потеряется, и метод «успешно» завершится.
+            if (write.checkError()) {
+                throw new IOException("Ошибка записи в файл: " + namae);
+            }
+
+        } finally {
+            if (write != null) {
+                write.close();
+            }
+        }
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный ArrayList в текстовый файл
-     * @param text текстовый файл
      * @param namae имя файла
      * @param b одномерный ArrayList действительных чисел
      */
-    public static void print_double_arr_for_text_file(File text, String namae, ArrayList<Double> b) {
+    public static void print_double_arr_for_text_file(String namae, ArrayList<Double> b) {
         //
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный массив в бинарный файл
-     * @param bin бинарный файл
      * @param namae имя файла
      * @param n количество элементов в массиве
      * @param a одномерный массив действительных чисел
      */
-    public static void print_double_arr_for_bin_file(File bin, String namae, int n, double[] a) {
+    public static void print_double_arr_for_bin_file(String namae, int n, double[] a) {
         //
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный ArrayList в бинарный файл
-     * @param bin бинарный файл
      * @param namae имя файла
      * @param b одномерный ArrayList действительных чисел
      */
-    public static void print_double_arr_for_bin_file(File bin, String namae, ArrayList<Double> b) {
+    public static void print_double_arr_for_bin_file(String namae, ArrayList<Double> b) {
         //
     }
     /*------------------------------------------------------------------------*/
