@@ -16,7 +16,7 @@ public class arrays
     //Собственное исключение для «пустого» файла
     public static class EmptyFileException extends IOException {
         public EmptyFileException(String namae) {
-            super("Файл '" + namae + "' не содержит чисел");
+            super("Файл \"" + namae + "\" не содержит чисел");
         }
     }
     /*------------------------------------------------------------------------*/
@@ -52,9 +52,10 @@ public class arrays
     }
     /*------------------------------------------------------------------------*/
     /** Заполняет одномерный действительный ArrayList случайными числами в диапазоне [op; ed]
-     * @param b одномерный ArrayList
+     * @param n количество элементов ArrayList
      * @param op начало диапазона
      * @param en конец диапазона
+     * @return b одномерный ArrayList
      **/
     public static ArrayList<Double> rand_double_arrlist(int n, double op, double en)
     {
@@ -149,8 +150,8 @@ public class arrays
      * @param namae имя файла
      * @return a одномерный массив действительных чисел
      * @throws FileNotFoundException файла нет
-     * @throws EmptyFileException    в файле не оказалось чисел
-     * @throws IOException           любая другая ошибка ввода-вывода
+     * @throws EmptyFileException в файле не оказалось чисел
+     * @throws IOException любая другая ошибка ввода-вывода
      */
     public static double[] read_double_arr_from_text_file(String namae) throws IOException {
         File text = new File(namae);
@@ -205,8 +206,8 @@ public class arrays
      * @param namae имя файла
      * @return b одномерный ArrayList действительных чисел
      * @throws FileNotFoundException файла нет
-     * @throws EmptyFileException    в файле не оказалось чисел
-     * @throws IOException           любая другая ошибка ввода-вывода
+     * @throws EmptyFileException в файле не оказалось чисел
+     * @throws IOException любая другая ошибка ввода-вывода
      */
     public static ArrayList<Double> read_double_arrlist_from_text_file(String namae) throws IOException {
         File text = new File(namae);
@@ -243,8 +244,8 @@ public class arrays
      * @param namae имя файла
      * @return a одномерный массив действительных чисел
      * @throws FileNotFoundException файла нет
-     * @throws EmptyFileException    в файле не оказалось чисел
-     * @throws IOException           любая другая ошибка ввода-вывода
+     * @throws EmptyFileException в файле не оказалось чисел
+     * @throws IOException любая другая ошибка ввода-вывода
      */
     public static double[] read_double_arr_from_bin_file(String namae) throws IOException {
         File bin = new File(namae);
@@ -300,8 +301,8 @@ public class arrays
      * @param namae имя файла
      * @return b одномерный ArrayList действительных чисел
      * @throws FileNotFoundException файла нет
-     * @throws EmptyFileException    в файле не оказалось чисел
-     * @throws IOException           любая другая ошибка ввода-вывода
+     * @throws EmptyFileException в файле не оказалось чисел
+     * @throws IOException любая другая ошибка ввода-вывода
      */
     public static ArrayList<Double> read_double_arrlist_from_bin_file(String namae) throws IOException {
         File bin = new File(namae);
@@ -340,23 +341,22 @@ public class arrays
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный массив в текстовый файл
      * @param namae имя файла
-     * @param n количество элементов в массиве
      * @param a одномерный массив действительных чисел
+     * @throws IOException любая ошибка записи
      */
-    public static void print_double_arr_for_text_file(String namae, int n, double[] a) {
+    public static void print_double_arr_for_text_file(String namae, double[] a) throws IOException {
         PrintWriter write = null;
+
+        int n = a.length;
         try {
             write = new PrintWriter(new FileWriter(namae));
 
-            for (int i = 0; i < a.length; i += 1) {
+            for (int i = 0; i < n; i += 1) {
                 // Locale.US — чтобы в файле была точка, а не запятая
-                // %n — перенос строки в системном формате (на Linux/Windows одинаково)
                 write.printf(Locale.US, "%.6f%n", a[i]);
             }
 
-            // КРИТИЧНО: PrintWriter НЕ бросает IOException — он молча выставляет
-            // внутренний флаг. Без checkError() ошибка диска (нет места, нет прав)
-            // потеряется, и метод «успешно» завершится.
+            // т.к. PrintWriter не бросает IOException — используется checkError()
             if (write.checkError()) {
                 throw new IOException("Ошибка записи в файл: " + namae);
             }
@@ -371,26 +371,79 @@ public class arrays
     /** Выводит одномерный действительный ArrayList в текстовый файл
      * @param namae имя файла
      * @param b одномерный ArrayList действительных чисел
+     * @throws IOException любая ошибка записи
      */
-    public static void print_double_arr_for_text_file(String namae, ArrayList<Double> b) {
-        //
+    public static void print_double_arr_for_text_file(String namae, ArrayList<Double> b) throws IOException {
+        PrintWriter write = null;
+
+        int n = b.size();
+        try {
+            write = new PrintWriter(new FileWriter(namae));
+
+            for (int i = 0; i < n; i += 1) {
+                write.printf(Locale.US, "%.6f%n", b.get(i));
+            }
+
+            // т.к. PrintWriter не бросает IOException — используется checkError()
+            if (write.checkError()) {
+                throw new IOException("Ошибка записи в файл: " + namae);
+            }
+
+        } finally {
+            if (write != null) {
+                write.close();
+            }
+        }
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный массив в бинарный файл
      * @param namae имя файла
-     * @param n количество элементов в массиве
      * @param a одномерный массив действительных чисел
+     * @throws IOException любая ошибка записи
      */
-    public static void print_double_arr_for_bin_file(String namae, int n, double[] a) {
-        //
+    public static void print_double_arr_for_bin_file(String namae, double[] a) throws IOException {
+        DataOutputStream write = null;
+        int n = a.length;
+
+        try {
+            write = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(namae)));
+
+            for (int i = 0; i < n; i += 1) {
+                write.writeDouble(a[i]);        // ровно 8 байт
+            }
+
+            // т.к. DataOutputStream сам бросает IOException — checkError() не нужен
+
+        } finally {
+            if (write != null) {
+                write.close();
+            }
+        }
     }
     /*------------------------------------------------------------------------*/
     /** Выводит одномерный действительный ArrayList в бинарный файл
      * @param namae имя файла
      * @param b одномерный ArrayList действительных чисел
+     * @throws IOException любая ошибка записи
      */
-    public static void print_double_arr_for_bin_file(String namae, ArrayList<Double> b) {
-        //
+    public static void print_double_arrlist_for_bin_file(String namae, ArrayList<Double> b) throws IOException {
+        DataOutputStream write = null;
+        int n = b.size();
+
+        try {
+            write = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(namae)));
+
+            for (int i = 0; i < n; i += 1) {
+                write.writeDouble(b.get(i));    // ровно 8 байт
+            }
+
+            // т.к. DataOutputStream сам бросает IOException — checkError() не нужен
+
+        } finally {
+            if (write != null) {
+                write.close();
+            }
+        }
     }
     /*------------------------------------------------------------------------*/
 }

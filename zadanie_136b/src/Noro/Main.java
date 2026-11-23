@@ -23,10 +23,10 @@ public class Main {
         assert((Math.abs(arrays.product_double_arr(1, new double[]{1.0}) - 1.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
         assert((Math.abs(arrays.product_double_arr(3, new double[]{2.0, -4.0, 0.0}) - 0.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
         //проверки для ArrayList
-        //assert((Math.abs(arrays.product_double_arr(new ArrayList<>(List.of(1.0, 2.0, 3.0, 4.0))) - 24.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
-        //assert((Math.abs(arrays.product_double_arr(new ArrayList<>(List.of(-2.0, 5.0))) - -10.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
-        //assert((Math.abs(arrays.product_double_arr(new ArrayList<>(List.of(1.0))) - 1.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
-        //assert((Math.abs(arrays.product_double_arr(new ArrayList<>(List.of(2.0, -4.0, 0.0))) - 0.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
+        assert((Math.abs(arrays.product_double_arrlist(new ArrayList<>(List.of(1.0, 2.0, 3.0, 4.0))) - 24.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
+        assert((Math.abs(arrays.product_double_arrlist(new ArrayList<>(List.of(-2.0, 5.0))) - -10.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
+        assert((Math.abs(arrays.product_double_arrlist(new ArrayList<>(List.of(1.0))) - 1.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
+        assert((Math.abs(arrays.product_double_arrlist(new ArrayList<>(List.of(2.0, -4.0, 0.0))) - 0.0)) <= 1e-9): "ошибка в вычислении функции arrays.product_double_arr()";
 
         int n = 0;
         double[] a;
@@ -45,7 +45,8 @@ public class Main {
                         "Пример использования:\n" +
                         "  java Noro.Main 4 3.1 5.8 9.33 -2.0\n" +
                         "  java Noro.Main tch.txt\n" +
-                        "  java Noro.Main 'tch.txt'");
+                        "  java Noro.Main 'tch.txt'\n" +
+                        "  java Noro.Main \"tch.bin\"");
                 return;
             }
 
@@ -107,10 +108,6 @@ public class Main {
                 throw new NumberFormatException("Некорректное значение: " + ni);
             }
 
-            //из файла
-            //a = arrays.read_double_arr_from_text_file("tch.txt");
-            //n = a.length;
-
             //массив задать случайными числами
             a = new double[n];
             a = arrays.rand_double_arr(n, -90.0, 90.0);
@@ -123,6 +120,30 @@ public class Main {
                 b.add(0.0);
             }
             b = arrays.rand_double_arrlist(n, -90.0, 90.0);
+            */
+
+            /*
+            //массив задать из текстового файла
+            a = arrays.read_double_arr_from_text_file("tch.txt");
+            n = a.length;
+            */
+
+            /*
+            //Arraylist задать из текстового файла
+            b = arrays.read_double_arrlist_from_text_file("tch.txt");
+            n = b.size();
+            */
+
+            /*
+            //массив задать из бинарного файла
+            a = arrays.read_double_arr_from_bin_file("tch.bin");
+            n = a.length;
+            */
+
+            /*
+            //ArrayList задать из бинарного файла
+            b = arrays.read_double_arrlist_from_bin_file("tch.bin");
+            n = b.size();
             */
         }
 
